@@ -4,13 +4,14 @@ import * as dotenv from 'dotenv';
 import Replicate from 'replicate';
 import { reader } from '../../client/src/config/helpers.js';
 import axios from 'axios';
-import fetch from 'node-fetch';
+import fetch from 'cross-fetch';
 import fs from 'fs';
 dotenv.config();
 
 const router = express.Router();
 const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
+  fetch: fetch,
 });
 
 router.route('/').get((req, res) => {
@@ -20,12 +21,10 @@ router.route('/').get((req, res) => {
 router.route('/').post(async (req, res) => {
   try {
     const { prompt } = req.body;
-    const headers = req.headers;
     const model =
       'stability-ai/stable-diffusion:27b93a2413e7f36cd83da926f3656280b2931564ff050bf9575f1fdf9bcd7478';
     const input = {
       prompt,
-      headers,
       width: 384,
       height: 384,
     };
