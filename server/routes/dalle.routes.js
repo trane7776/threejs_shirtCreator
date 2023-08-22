@@ -20,10 +20,12 @@ router.route('/').get((req, res) => {
 router.route('/').post(async (req, res) => {
   try {
     const { prompt } = req.body;
+    const headers = req.headers;
     const model =
       'stability-ai/stable-diffusion:27b93a2413e7f36cd83da926f3656280b2931564ff050bf9575f1fdf9bcd7478';
     const input = {
       prompt,
+      headers,
       width: 384,
       height: 384,
     };
