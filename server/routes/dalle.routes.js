@@ -4,6 +4,7 @@ import * as dotenv from 'dotenv';
 import Replicate from 'replicate';
 import { reader } from '../../client/src/config/helpers.js';
 import axios from 'axios';
+import fetch from 'node-fetch';
 import fs from 'fs';
 dotenv.config();
 
@@ -41,8 +42,8 @@ router.route('/').post(async (req, res) => {
 });
 async function convertImageToBase64Json(url) {
   try {
-    const response = await axios.get(url, { responseType: 'arraybuffer' });
-    const imageBuffer = await Buffer.from(response.data, 'binary');
+    const response = await fetch(url); // Используйте fetch из node-fetch
+    const imageBuffer = await response.buffer();
     const base64Image = await imageBuffer.toString('base64');
     return base64Image;
   } catch (error) {
