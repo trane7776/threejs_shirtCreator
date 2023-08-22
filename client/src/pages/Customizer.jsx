@@ -55,6 +55,9 @@ const Customizer = () => {
           body: JSON.stringify({
             prompt,
           }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
         }
       );
       const data = await response.json();

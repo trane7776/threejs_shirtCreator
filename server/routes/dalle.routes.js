@@ -2,16 +2,12 @@ import express from 'express';
 
 import * as dotenv from 'dotenv';
 import Replicate from 'replicate';
-import { reader } from '../../client/src/config/helpers.js';
 import axios from 'axios';
-import fetch from 'cross-fetch';
-import fs from 'fs';
 dotenv.config();
 
 const router = express.Router();
 const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
-  fetch: fetch,
 });
 
 router.route('/').get((req, res) => {
@@ -28,10 +24,8 @@ router.route('/').post(async (req, res) => {
       width: 384,
       height: 384,
     };
-    console.log('1');
     const output = await replicate.run(model, { input });
-    console.log('2');
-    convertImageToBase64Json(output[0])
+    convertImageToBase64(output[0])
       .then((base64Json) => {
         res.status(200).json({ photo: base64Json });
       })
@@ -43,18 +37,15 @@ router.route('/').post(async (req, res) => {
     res.status(500).json({ message: 'Something went wrong' });
   }
 });
-async function convertImageToBase64Json(url) {
+async function convertImageToBase64(imageUrl) {
   try {
-    console.log('4');
-    const response = await fetch(url); // Используйте fetch из node-fetch
-    console.log('5');
-    const imageBuffer = await response.buffer();
-    console.log('6');
-    const base64Image = await imageBuffer.toString('base64');
+    const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+    const base64Image = Buffer.from(response.data, 'binary').toString('base64');
     return base64Image;
   } catch (error) {
-    console.error(error);
-    throw new Error('Failed to convert image to Base64 JSON');
+    console.error('Error converting image to Base64:', error.message);
+    return null;
   }
 }
+
 export default router;
