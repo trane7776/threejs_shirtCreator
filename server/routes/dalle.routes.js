@@ -27,7 +27,9 @@ router.route('/').post(async (req, res) => {
       width: 384,
       height: 384,
     };
+    console.log('1');
     const output = await replicate.run(model, { input });
+    console.log('2');
     convertImageToBase64Json(output[0])
       .then((base64Json) => {
         res.status(200).json({ photo: base64Json });
@@ -42,8 +44,11 @@ router.route('/').post(async (req, res) => {
 });
 async function convertImageToBase64Json(url) {
   try {
+    console.log('4');
     const response = await fetch(url); // Используйте fetch из node-fetch
+    console.log('5');
     const imageBuffer = await response.buffer();
+    console.log('6');
     const base64Image = await imageBuffer.toString('base64');
     return base64Image;
   } catch (error) {
