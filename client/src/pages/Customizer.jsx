@@ -129,7 +129,9 @@ const Customizer = () => {
                     key={tab.name}
                     tab={tab}
                     handleClick={() => {
-                      setActiveEditorTab(tab.name);
+                      activeEditorTab === tab.name
+                        ? setActiveEditorTab('')
+                        : setActiveEditorTab(tab.name);
                     }}
                   ></Tab>
                 ))}
